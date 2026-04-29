@@ -11,12 +11,16 @@ const parser = new Parser({
 
 function normaliseItem(item, sourceName, categoryFallback) {
   const publishedAt = item.isoDate || item.pubDate || item.published || null
+
   return {
-    id: item.guid || item.id || item.link || `${sourceName}:${item.title}`,
-    title: (item.title || '').trim() || 'Untitled',
+    id: item.guid || item.id || item.link || `${sourceName}-${item.title}`,
+    title: (item.title || '').trim(),
     url: item.link,
     source: sourceName,
-    summary: ((item.contentSnippet || item.summary || item.content || '') + '').replace(/\s+/g,' ').trim().slice(0, 320),
+    summary: ((item.contentSnippet || item.summary || item.content || '') + '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 300),
     publishedAt,
     category: categoryFallback || 'Business'
   }
@@ -24,37 +28,41 @@ function normaliseItem(item, sourceName, categoryFallback) {
 
 function dedupe(items) {
   const seen = new Set()
-  return items.filter(i => {
-    const key = `${i.url || ''}|${i.title || ''}`
+  return items.filter(item => {
+    const key = `${item.url}|${item.title}`
     if (seen.has(key)) return false
     seen.add(key)
     return true
   })
 }
 
-function pickCategory(sourceDefault, title, summary) {
-  // Very simple keyword routing (optional). Source default wins.
-  if (sourceDefault) return sourceDefault
+function autoCategory(defaultCategory, title, summary) {
+  if (defaultCategory) return defaultCategory
+
   const text = `${title} ${summary}`.toLowerCase()
+
   const rules = [
-    { cat: 'Motor', keys: ['motor','car','vehicle','fleet','adas','ev','collision','repair'] },
-    { cat: 'Home', keys: ['home','property','buildings','contents','flood','subsidence'] },
-    { cat: 'Life & Health', keys: ['life','health','protection','income protection','critical illness','medical'] },
-    { cat: 'Rural', keys: ['rural','farm','agriculture','estate'] },
-    { cat: 'Student', keys: ['student','university','campus'] },
-    { cat: 'Trade', keys: ['broker','mga','underwriting','reinsurance','regulation','fca','pra','abi','biba'] },
+    { cat: 'Motor', keys: ['motor', 'vehicle', 'car', 'ev', 'fleet'] },
+    { cat: 'Home', keys: ['home', 'property', 'buildings', 'flood'] },
+    { cat: 'Life & Health', keys: ['life', 'health', 'protection', 'medical'] },
+    { cat: 'Rural', keys: ['rural', 'farm', 'agriculture'] },
+    { cat: 'Student', keys: ['student', 'university'] },
+    { cat: 'Trade', keys: ['broker', 'mga', 'underwriting', 'fca', 'biba', 'abi'] }
   ]
-  for (const r of rules) {
-    if (r.keys.some(k => text.includes(k))) return r.cat
+
+  for (const rule of rules) {
+    if (rule.keys.some(k => text.includes(k))) {
+      return rule.cat
+    }
   }
+
   return 'Business'
 }
 
 async function discoverFeedUrl(siteUrl) {
-  // Fetch the HTML and look for <link rel="alternate" type="application/rss+xml|application/atom+xml">
-  // Also accept obvious feed hrefs.
   const res = await fetch(siteUrl, { redirect: 'follow' })
-  if (!res.ok) throw new Error(`Fetch failed: ${res.status}`)
+  if (!res.ok) throw new Error(`Failed to fetch ${siteUrl}`)
+
   const html = await res.text()
   const $ = cheerio.load(html)
 
@@ -63,79 +71,104 @@ async function discoverFeedUrl(siteUrl) {
   $('link[rel="alternate"]').each((_, el) => {
     const type = ($(el).attr('type') || '').toLowerCase()
     const href = $(el).attr('href')
-    if (!href) return
-    if (type.includes('rss') || type.includes('atom') || type.includes('xml')) candidates.push(href)
+    if (href && (type.includes('rss') || type.includes('atom') || type.includes('xml'))) {
+      candidates.push(href)
+    }
   })
 
   $('a').each((_, el) => {
     const href = $(el).attr('href')
     if (!href) return
-    const text = ($(el).text() || '').toLowerCase()
+
     const h = href.toLowerCase()
-    if (h.includes('rss') || h.includes('atom') || h.endsWith('.xml') || text.includes('rss') || text.includes('feed')) {
+    if (h.includes('rss') || h.includes('feed') || h.endsWith('.xml')) {
       candidates.push(href)
     }
   })
 
-  // Normalise and prefer likely feed links
-  const norm = candidates
+  const urls = candidates
     .map(href => {
-      try { return new URL(href, siteUrl).toString() } catch { return null }
+      try {
+        return new URL(href, siteUrl).toString()
+      } catch {
+        return null
+      }
     })
     .filter(Boolean)
 
-  const preferred = norm.find(u => u.endsWith('/feed/') || u.includes('feed') || u.includes('rss') || u.includes('.atom') || u.endsWith('.xml'))
-  return preferred || norm[0] || null
+  return urls[0] || null
 }
 
-export default async (req) => {
+/**
+ * ✅ NETLIFY FUNCTION ENTRY POINT
+ */
+export const handler = async () => {
   try {
-    const sources = sourcesCfg.sources || []
     const results = []
     const sourceErrors = []
 
-    // Pull from each source in parallel
-    await Promise.all(sources.map(async (s) => {
+    for (const source of sourcesCfg.sources) {
       try {
-        let feedUrl = s.feedUrl
-        if (!feedUrl && s.siteUrl) {
-          feedUrl = await discoverFeedUrl(s.siteUrl)
+        let feedUrl = source.feedUrl
+
+        if (!feedUrl && source.siteUrl) {
+          feedUrl = await discoverFeedUrl(source.siteUrl)
         }
-        if (!feedUrl) throw new Error('No feed URL found')
+
+        if (!feedUrl) {
+          throw new Error('No RSS/Atom feed found')
+        }
 
         const feed = await parser.parseURL(feedUrl)
-        const items = (feed.items || []).slice(0, 25)
-        for (const item of items) {
-          const tmp = normaliseItem(item, s.name, s.defaultCategory)
-          tmp.category = pickCategory(s.defaultCategory, tmp.title, tmp.summary)
-          // Only include usable items
-          if (tmp.url && tmp.publishedAt) results.push(tmp)
+        const items = feed.items || []
+
+        for (const item of items.slice(0, 25)) {
+          const normalised = normaliseItem(
+            item,
+            source.name,
+            source.defaultCategory
+          )
+
+          if (!normalised.url || !normalised.publishedAt) continue
+
+          normalised.category = autoCategory(
+            source.defaultCategory,
+            normalised.title,
+            normalised.summary
+          )
+
+          results.push(normalised)
         }
-      } catch (e) {
-        sourceErrors.push({ source: s.name, error: (e && e.message) ? e.message : String(e) })
+      } catch (err) {
+        sourceErrors.push({
+          source: source.name,
+          error: err.message
+        })
       }
-    }))
+    }
 
-    const cleaned = dedupe(results)
-      .sort((a,b) => new Date(b.publishedAt) - new Date(a.publishedAt))
-      .slice(0, 400)
+    const cleaned = dedupe(results).sort(
+      (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
+    )
 
-    return new Response(JSON.stringify({
-      items: cleaned,
-      // Expose sourceErrors for internal troubleshooting (safe because internal tool)
-      sourceErrors
-    }), {
-      status: 200,
+    return {
+      statusCode: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        // Edge cache for 10 mins
         'Cache-Control': 'public, max-age=0, s-maxage=600'
-      }
-    })
+      },
+      body: JSON.stringify({
+        items: cleaned,
+        sourceErrors
+      })
+    }
   } catch (err) {
-    return new Response(JSON.stringify({ error: 'Failed to fetch feeds' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: 'Function crashed',
+        message: err.message
+      })
+    }
   }
 }
