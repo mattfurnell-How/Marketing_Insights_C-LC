@@ -3,132 +3,45 @@
     {
       "name": "Insurance Business UK",
       "feedUrl": "https://www.insurancebusinessmag.com/uk/rss",
-      "defaultCategory": "Trade"
+      "defaultCategory": "Insurance"
     },
-    
+    {
+      "name": "Post Magazine",
+      "feedUrl": "https://www.postonline.co.uk/rss",
+      "defaultCategory": "Insurance"
+    },
+    {
+      "name": "The Insurer",
+      "feedUrl": "https://www.theinsurer.com/rss",
+      "defaultCategory": "Insurance"
+    },
+    {
+      "name": "Insurance Times",
+      "feedUrl": "https://www.insurancetimes.co.uk/rss",
+      "defaultCategory": "Insurance"
+    },
     {
       "name": "BIBA",
       "feedUrl": "https://biba.org.uk/feed",
-      "defaultCategory": "Trade"
-    },
-    {
-      "name": "Policy Expert Blog",
-      "feedUrl": "https://blog.policyexpert.co.uk/feed",
-      "defaultCategory": "Home"
-    },
-    {
-      "name": "GOV.UK (News & communications)",
-      "siteUrl": "https://www.gov.uk/search/news-and-communications",
-      "defaultCategory": "Business"
-    },
-    {
-      "name": "Go Girl Car Insurance Blog",
-      "feedUrl": "https://gogirl.co.uk/feed",
-      "defaultCategory": "Motor"
-    },
-    {
-      "name": "Yellow Jersey Cycle Insurance",
-      "feedUrl": "https://yellowjersey.co.uk/feed/?x=1",
-      "defaultCategory": "Motor"
-    },
-    {
-      "name": "Plan Insurance Brokers",
-      "feedUrl": "https://planinsurance.co.uk/blog/feed",
-      "defaultCategory": "Trade"
-    },
-    {
-      "name": "Get Going Insurance",
-      "feedUrl": "https://getgoinginsurance.co.uk/feed",
-      "defaultCategory": "Life & Health"
-    },
-    {
-      "name": "Columbus Direct",
-      "feedUrl": "https://columbusdirect.com/content/feed",
-      "defaultCategory": "Life & Health"
-    },
-    {
-      "name": "Cycleplan – Cycle Savvy",
-      "feedUrl": "https://cycleplan.co.uk/cycle-savvy/rss",
-      "defaultCategory": "Motor"
+      "defaultCategory": "Insurance"
     },
 
-    {
-      "name": "Bank of England – News",
-      "feedUrl": "https://www.bankofengland.co.uk/RSS/News",
-      "defaultCategory": "Regulation"
-    },
-    {
-      "name": "Bank of England – Statistics",
-      "feedUrl": "https://www.bankofengland.co.uk/rss/statistics",
-      "defaultCategory": "Finance"
-    },
-    {
-      "name": "PRA – Publications",
-      "feedUrl": "https://www.bankofengland.co.uk/rss/prudential-regulation-publications",
-      "defaultCategory": "Regulation"
-    },
-    {
-      "name": "Bank Overground",
-      "feedUrl": "https://www.bankofengland.co.uk/rss/bank-overground",
-      "defaultCategory": "Finance"
-    },
-    {
-      "name": "Bank Underground",
-      "feedUrl": "https://bankunderground.co.uk/feed",
-      "defaultCategory": "Finance"
-    },
-
-    {
-      "name": "Insurance Journal",
-      "feedUrl": "http://www.insurancejournal.com/rss/news",
-      "defaultCategory": "Trade"
-    },
-    {
-      "name": "Insurance Journal – Academy",
-      "feedUrl": "https://www.insurancejournal.com/blogs/academy-journal/feed",
-      "defaultCategory": "Trade"
-    },
-    {
-      "name": "Insurance Business US",
-      "feedUrl": "https://www.insurancebusinessmag.com/us/rss",
-      "defaultCategory": "Trade"
-    },
-    {
-      "name": "Business Insurance – News",
-      "feedUrl": "https://www.businessinsurance.com/section/rss?feed=NEWS",
-      "defaultCategory": "Business"
-    },
-    {
-      "name": "Business Insurance – Global",
-      "feedUrl": "https://www.businessinsurance.com/section/rss?feed=GLOBAL",
-      "defaultCategory": "Business"
-    },
-    {
-      "name": "Business Insurance – Risk Management",
-      "feedUrl": "https://www.businessinsurance.com/section/rss?feed=NEWS06",
-      "defaultCategory": "Risk"
-    },
-    {
-      "name": "Business Insurance – Workers Comp",
-      "feedUrl": "https://www.businessinsurance.com/section/rss?feed=NEWS08",
-      "defaultCategory": "Risk"
-    },
-
-    {
-      "name": "Canadian Underwriter",
-      "feedUrl": "https://www.canadianunderwriter.ca/feed",
-      "defaultCategory": "Trade"
-    },
-    {
-      "name": "Carrier Management",
-      "feedUrl": "https://www.carriermanagement.com/feed",
-      "defaultCategory": "Trade"
-    },
     {
       "name": "Claims Journal",
-      "feedUrl": "http://www.claimsjournal.com/rss/news",
-      "defaultCategory": "Risk"
+      "feedUrl": "https://www.claimsjournal.com/rss/news",
+      "defaultCategory": "Claims"
     },
+    {
+      "name": "Insurance Journal",
+      "feedUrl": "https://www.insurancejournal.com/rss/news",
+      "defaultCategory": "Claims"
+    },
+    {
+      "name": "PropertyCasualty360",
+      "feedUrl": "https://www.propertycasualty360.com/feed/",
+      "defaultCategory": "Claims"
+    },
+
     {
       "name": "Risk & Insurance",
       "feedUrl": "https://riskandinsurance.com/feed",
@@ -140,13 +53,8 @@
       "defaultCategory": "Risk"
     },
     {
-      "name": "PLUS – Professional Liability",
-      "feedUrl": "https://plusblog.org/feed",
-      "defaultCategory": "Risk"
-    },
-    {
-      "name": "Workers Comp Insider",
-      "feedUrl": "http://workerscompinsider.com/feed",
+      "name": "Risk.net",
+      "feedUrl": "https://www.risk.net/rss",
       "defaultCategory": "Risk"
     },
 
@@ -160,67 +68,58 @@
       "feedUrl": "https://www.reinsurancene.ws/feed/",
       "defaultCategory": "Reinsurance"
     },
+
     {
-      "name": "IIHS / HLDI",
-      "feedUrl": "http://feeds.feedburner.com/iihs",
-      "defaultCategory": "Motor"
+      "name": "UK Finance – News",
+      "feedUrl": "https://www.ukfinance.org.uk/news-and-insight/blog/feed",
+      "defaultCategory": "Regulation"
     },
     {
-      "name": "Center for Auto Safety",
-      "feedUrl": "https://www.autosafety.org/feed",
-      "defaultCategory": "Motor"
+      "name": "Bank of England – News",
+      "feedUrl": "https://www.bankofengland.co.uk/rss/news",
+      "defaultCategory": "Regulation"
     },
     {
-      "name": "FLASH – Federal Alliance for Safe Homes",
-      "feedUrl": "https://flash.org/news/multimedia/feed/",
-      "defaultCategory": "Home"
+      "name": "Prudential Regulation Authority",
+      "feedUrl": "https://www.bankofengland.co.uk/rss/prudential-regulation-publications",
+      "defaultCategory": "Regulation"
+    },
+    {
+      "name": "Financial Conduct Authority",
+      "feedUrl": "https://www.fca.org.uk/news/rss.xml",
+      "defaultCategory": "Regulation"
     },
 
     {
-      "name": "Insurance Information Institute",
-      "feedUrl": "https://www.iii.org/insuranceindustryblog/feed",
-      "defaultCategory": "Trade"
+      "name": "Cyber Security News",
+      "feedUrl": "https://www.csoonline.com/uk/feed/",
+      "defaultCategory": "Security"
     },
     {
-      "name": "III – Resilience",
-      "feedUrl": "https://resilience.iii.org/feed",
+      "name": "Dark Reading",
+      "feedUrl": "https://www.darkreading.com/rss.xml",
+      "defaultCategory": "Security"
+    },
+    {
+      "name": "The Hacker News",
+      "feedUrl": "https://thehackernews.com/feeds/posts/default",
+      "defaultCategory": "Security"
+    },
+
+    {
+      "name": "ABI – Association of British Insurers",
+      "feedUrl": "https://www.abi.org.uk/news/rss/",
+      "defaultCategory": "Insurance"
+    },
+    {
+      "name": "Lloyd’s of London – News",
+      "feedUrl": "https://www.lloyds.com/rss",
+      "defaultCategory": "Insurance"
+    },
+    {
+      "name": "McKinsey – Insurance Insights",
+      "feedUrl": "https://www.mckinsey.com/industries/financial-services/our-insights/rss",
       "defaultCategory": "Risk"
-    },
-    {
-      "name": "Life Happens",
-      "feedUrl": "http://www.lifehappens.org/feed",
-      "defaultCategory": "Life & Health"
-    },
-
-    {
-      "name": "Kaiser Health News – Insurance",
-      "feedUrl": "https://khn.org/topics/insurance/feed",
-      "defaultCategory": "Life & Health"
-    },
-    {
-      "name": "Kaiser Health News – Uninsured",
-      "feedUrl": "https://khn.org/topics/uninsured/feed",
-      "defaultCategory": "Life & Health"
-    },
-    {
-      "name": "Center on Health Insurance Reforms",
-      "feedUrl": "https://chirblog.org/feed",
-      "defaultCategory": "Life & Health"
-    },
-    {
-      "name": "HealthCare.gov Blog",
-      "feedUrl": "https://www.healthcare.gov/blog/blog.rss",
-      "defaultCategory": "Life & Health"
-    },
-    {
-      "name": "Politico – Health Care",
-      "feedUrl": "https://rss.politico.com/healthcare.xml",
-      "defaultCategory": "Life & Health"
-    },
-    {
-      "name": "California Healthline",
-      "feedUrl": "https://californiahealthline.org/feed",
-      "defaultCategory": "Life & Health"
     }
   ]
 }
