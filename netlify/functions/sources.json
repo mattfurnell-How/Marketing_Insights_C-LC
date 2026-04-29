@@ -5,6 +5,7 @@
       "feedUrl": "https://www.insurancebusinessmag.com/uk/rss",
       "defaultCategory": "Trade"
     },
+    
     {
       "name": "BIBA",
       "feedUrl": "https://biba.org.uk/feed",
@@ -16,9 +17,9 @@
       "defaultCategory": "Home"
     },
     {
-      "name": "Devitt Insurance Blog",
-      "feedUrl": "https://devittinsurance.com/blog/feed",
-      "defaultCategory": "Motor"
+      "name": "GOV.UK (News & communications)",
+      "siteUrl": "https://www.gov.uk/search/news-and-communications",
+      "defaultCategory": "Business"
     },
     {
       "name": "Go Girl Car Insurance Blog",
