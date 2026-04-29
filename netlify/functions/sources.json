@@ -1,16 +1,6 @@
 {
   "sources": [
     {
-      "name": "GOV.UK (News & communications)",
-      "siteUrl": "https://www.gov.uk/search/news-and-communications",
-      "defaultCategory": "Business"
-    },
-    {
-      "name": "Thatcham Research",
-      "feedUrl": "https://news.thatcham.org/section/all-news/feed/",
-      "defaultCategory": "Motor"
-    },
-    {
       "name": "Insurance Business UK",
       "feedUrl": "https://www.insurancebusinessmag.com/uk/rss",
       "defaultCategory": "Trade"
@@ -233,4 +223,3 @@
     }
   ]
 }
-``
