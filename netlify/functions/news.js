@@ -32,48 +32,37 @@ async function fetchText(url, timeoutMs = 9000) {
 }
 
 // --------------------
-// DATE HANDLING (ROBUST + FUTURE SAFE)
+// DATE HANDLING
 // --------------------
 
 function cleanDateString(dateStr) {
-  if (!dateStr || typeof dateStr !== "string") {
-    return null;
-  }
+  if (!dateStr || typeof dateStr !== "string") return null;
 
   return dateStr
     .replace(/\s+/g, " ")
-    .replace(/(\d{1,2})(st|nd|rd|th)/gi, "$1") // 31st -> 31
+    .replace(/(\d{1,2})(st|nd|rd|th)/gi, "$1")
     .replace(/^published[:\s-]*/i, "")
     .replace(/^updated[:\s-]*/i, "")
     .trim();
 }
 
 function parseSafeDate(dateInput) {
-  if (!dateInput) {
-    return null;
-  }
+  if (!dateInput) return null;
 
-  // Already valid Date object
   if (dateInput instanceof Date && !isNaN(dateInput.getTime())) {
     return dateInput.toISOString();
   }
 
-  // Unix timestamp
   if (typeof dateInput === "number") {
     const d = new Date(dateInput);
     return isNaN(d.getTime()) ? null : d.toISOString();
   }
 
   const cleaned = cleanDateString(String(dateInput));
+  if (!cleaned) return null;
 
-  if (!cleaned) {
-    return null;
-  }
-
-  // Native parse attempt
   let parsed = new Date(cleaned);
 
-  // Handle UK dd/mm/yyyy manually
   if (isNaN(parsed.getTime())) {
     const ukMatch = cleaned.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
 
@@ -88,14 +77,16 @@ function parseSafeDate(dateInput) {
     }
   }
 
-  // Final validation
   if (isNaN(parsed.getTime())) {
-    console.warn("Invalid date encountered:", dateInput);
     return null;
   }
 
   return parsed.toISOString();
 }
+
+// --------------------
+// CORE HELPERS
+// --------------------
 
 function normaliseItem({
   title,
@@ -124,11 +115,7 @@ function dedupe(items) {
 
   return items.filter((it) => {
     const key = `${(it.url || "").toLowerCase()}|${(it.title || "").toLowerCase()}`;
-
-    if (seen.has(key)) {
-      return false;
-    }
-
+    if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
@@ -143,88 +130,21 @@ function classify(defaultCategory, title, summary) {
 
   const has = (...words) => words.some((w) => text.includes(w));
 
-  if (has("student", "university", "maintenance loan", "freshers")) {
-    return "Student";
-  }
-
-  if (has("farm", "farming", "rural", "agri", "livestock")) {
-    return "Rural";
-  }
-
-  if (has("motor", "car", "van", "driver", "fleet", "ev", "theft")) {
-    return "Motor";
-  }
-
-  if (has("home", "property", "buildings", "contents", "flood", "subsidence")) {
-    return "Home";
-  }
-
-  if (
-    has(
-      "life insurance",
-      "income protection",
-      "health",
-      "medical",
-      "nhs"
-    )
-  ) {
-    return "Life & Health";
-  }
-
-  if (
-    has(
-      "broker",
-      "underwriting",
-      "lloyd",
-      "reinsurance",
-      "claims",
-      "fca",
-      "pra",
-      "abi",
-      "biba"
-    )
-  ) {
-    return "Trade";
-  }
+  if (has("student", "university", "maintenance loan", "freshers")) return "Student";
+  if (has("farm", "farming", "rural", "agri", "livestock")) return "Rural";
+  if (has("motor", "car", "van", "driver", "fleet", "ev", "theft")) return "Motor";
+  if (has("home", "property", "buildings", "contents", "flood", "subsidence")) return "Home";
+  if (has("life insurance", "income protection", "health", "medical", "nhs")) return "Life & Health";
+  if (has("broker", "underwriting", "lloyd", "reinsurance", "claims", "fca", "pra", "abi", "biba")) return "Trade";
 
   return defaultCategory || "Business";
 }
 
 // --------------------
-// SCRAPER: Hiscox UK business-blog
+// GENERIC SCRAPER ENGINE (NEW)
 // --------------------
 
-const HISCOX_CATEGORY_SLUGS = new Set([
-  "brand-and-marketing",
-  "finance-and-legal",
-  "starting-up",
-  "customers-and-clients",
-  "small-business-stories",
-  "data-and-tech",
-  "growth-and-operations",
-  "wellbeing-and-workplace",
-  "authors"
-]);
-
-function isLikelyHiscoxArticlePath(pathname) {
-  const parts = pathname.split("/").filter(Boolean);
-
-  if (parts.length !== 2) return false;
-  if (parts[0] !== "business-blog") return false;
-  if (HISCOX_CATEGORY_SLUGS.has(parts[1])) return false;
-
-  return true;
-}
-
-function parseHiscoxPublishedDate(text) {
-  const m = text.match(
-    /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}(st|nd|rd|th)?,\s+\d{4}\b/
-  );
-
-  return m ? parseSafeDate(m[0]) : null;
-}
-
-async function scrapeHiscoxBusinessBlog(listUrl) {
+async function scrapeGenericArticles({ listUrl, sourceName, category, hostname, match }) {
   const html = await fetchText(listUrl, 9000);
   const $ = cheerio.load(html);
 
@@ -232,32 +152,29 @@ async function scrapeHiscoxBusinessBlog(listUrl) {
 
   $("a[href]").each((_, a) => {
     const href = $(a).attr("href");
-
     if (!href) return;
 
     let u;
-
     try {
       u = new URL(href, listUrl);
     } catch {
       return;
     }
 
-    if (u.hostname !== "www.hiscox.co.uk") return;
-    if (!isLikelyHiscoxArticlePath(u.pathname)) return;
+    if (hostname && u.hostname !== hostname) return;
+    if (!match(u.pathname)) return;
 
     articleUrls.add(u.toString());
   });
 
-  // Limit requests
   const urls = Array.from(articleUrls).slice(0, 25);
 
   const items = [];
 
   for (const url of urls) {
     try {
-      const articleHtml = await fetchText(url, 9000);
-      const $$ = cheerio.load(articleHtml);
+      const html = await fetchText(url, 9000);
+      const $$ = cheerio.load(html);
 
       const title =
         $$("meta[property='og:title']").attr("content") ||
@@ -269,22 +186,10 @@ async function scrapeHiscoxBusinessBlog(listUrl) {
         $$("meta[property='og:description']").attr("content") ||
         "";
 
-      // Better date extraction
       let publishedAt =
         $$("meta[property='article:published_time']").attr("content") ||
-        $$("meta[name='publish-date']").attr("content") ||
         $$("time").first().attr("datetime") ||
         null;
-
-      // Fallback to body-text scraping
-      if (!publishedAt) {
-        const bodyText = $$("body")
-          .text()
-          .replace(/\s+/g, " ")
-          .trim();
-
-        publishedAt = parseHiscoxPublishedDate(bodyText);
-      }
 
       items.push(
         normaliseItem({
@@ -292,17 +197,58 @@ async function scrapeHiscoxBusinessBlog(listUrl) {
           url,
           summary: description,
           publishedAt,
-          source: "Hiscox – Knowledge Centre (Business Blog)",
-          category: "Business"
+          source: sourceName,
+          category
         })
       );
     } catch (err) {
-      console.warn(`Failed scraping article ${url}:`, err.message);
+      console.warn(`Scrape failed: ${url}`, err.message);
     }
   }
 
   return items;
 }
+
+// --------------------
+// SCRAPER REGISTRY
+// --------------------
+
+const SCRAPERS = {
+  "https://www.hiscox.co.uk/business-blog": {
+    hostname: "www.hiscox.co.uk",
+    sourceName: "Hiscox – Knowledge Centre (Business Blog)",
+    category: "Business",
+
+    match(pathname) {
+      const parts = pathname.split("/").filter(Boolean);
+
+      const slugs = new Set([
+        "brand-and-marketing",
+        "finance-and-legal",
+        "starting-up",
+        "customers-and-clients",
+        "small-business-stories",
+        "data-and-tech",
+        "growth-and-operations",
+        "wellbeing-and-workplace",
+        "authors"
+      ]);
+
+      return parts.length === 2 && parts[0] === "business-blog" && !slugs.has(parts[1]);
+    }
+  },
+
+  "https://www.confused.com/home-insurance/guides": {
+    hostname: "www.confused.com",
+    sourceName: "Confused.com – Home Guides",
+    category: "Home",
+
+    match(pathname) {
+      const parts = pathname.split("/").filter(Boolean);
+      return parts.length >= 3 && parts[0] === "home-insurance" && parts[1] === "guides";
+    }
+  }
+};
 
 // --------------------
 // MAIN HANDLER
@@ -314,13 +260,8 @@ export const handler = async () => {
   if (CACHE.payload && now - CACHE.ts < CACHE_TTL_MS) {
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      },
-      body: JSON.stringify({
-        ...CACHE.payload,
-        cached: true
-      })
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({ ...CACHE.payload, cached: true })
     };
   }
 
@@ -336,31 +277,34 @@ export const handler = async () => {
       // --------------------
 
       if (source.sourceType === "scraped" && source.siteUrl) {
-        if (source.siteUrl === "https://www.hiscox.co.uk/business-blog") {
-          const scraped = await scrapeHiscoxBusinessBlog(source.siteUrl);
+        const scraper = SCRAPERS[source.siteUrl];
 
-          for (const it of scraped) {
-            it.category = classify(
-              source.defaultCategory,
-              it.title,
-              it.summary
-            );
-
-            allItems.push(it);
-          }
-
-          diagnostics.push({
-            source: source.name,
-            ok: true,
-            kind: "scraped",
-            ms: Date.now() - t0,
-            items: scraped.length
-          });
-
-          continue;
+        if (!scraper) {
+          throw new Error(`No scraper configured for ${source.siteUrl}`);
         }
 
-        throw new Error("Scraper not implemented for this siteUrl");
+        const scraped = await scrapeGenericArticles({
+          listUrl: source.siteUrl,
+          sourceName: scraper.sourceName,
+          category: scraper.category,
+          hostname: scraper.hostname,
+          match: scraper.match
+        });
+
+        for (const it of scraped) {
+          it.category = classify(source.defaultCategory, it.title, it.summary);
+          allItems.push(it);
+        }
+
+        diagnostics.push({
+          source: source.name,
+          ok: true,
+          kind: "scraped",
+          ms: Date.now() - t0,
+          items: scraped.length
+        });
+
+        continue;
       }
 
       // --------------------
@@ -369,7 +313,6 @@ export const handler = async () => {
 
       if (source.feedUrl) {
         const xml = await fetchText(source.feedUrl, 9000);
-
         const feed = await parser.parseString(xml);
 
         const items = (feed.items || []).slice(0, 25);
@@ -393,15 +336,7 @@ export const handler = async () => {
             item.content ||
             "";
 
-          if (!title || !url) {
-            continue;
-          }
-
-          const category = classify(
-            source.defaultCategory,
-            title,
-            summary
-          );
+          if (!title || !url) continue;
 
           allItems.push(
             normaliseItem({
@@ -410,7 +345,7 @@ export const handler = async () => {
               summary,
               publishedAt,
               source: source.name,
-              category
+              category: classify(source.defaultCategory, title, summary)
             })
           );
 
@@ -447,7 +382,6 @@ export const handler = async () => {
   const cleaned = dedupe(allItems).sort((a, b) => {
     const da = Date.parse(a.publishedAt || "") || 0;
     const db = Date.parse(b.publishedAt || "") || 0;
-
     return db - da;
   });
 
@@ -457,16 +391,11 @@ export const handler = async () => {
     cached: false
   };
 
-  CACHE = {
-    ts: Date.now(),
-    payload
-  };
+  CACHE = { ts: Date.now(), payload };
 
   return {
     statusCode: 200,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8"
-    },
+    headers: { "Content-Type": "application/json; charset=utf-8" },
     body: JSON.stringify(payload)
   };
 };
