@@ -1,125 +1,46 @@
 {
   "sources": [
-    {
-      "name": "Insurance Business UK",
-      "feedUrl": "https://www.insurancebusinessmag.com/uk/rss",
-      "defaultCategory": "Insurance"
-    },
-    {
-      "name": "Post Magazine",
-      "feedUrl": "https://www.postonline.co.uk/rss",
-      "defaultCategory": "Insurance"
-    },
-    {
-      "name": "The Insurer",
-      "feedUrl": "https://www.theinsurer.com/rss",
-      "defaultCategory": "Insurance"
-    },
-    {
-      "name": "Insurance Times",
-      "feedUrl": "https://www.insurancetimes.co.uk/rss",
-      "defaultCategory": "Insurance"
-    },
-    {
-      "name": "BIBA",
-      "feedUrl": "https://biba.org.uk/feed",
-      "defaultCategory": "Insurance"
-    },
+    { "name": "Insurance Business UK", "feedUrl": "https://www.insurancebusinessmag.com/uk/rss", "defaultCategory": "Trade" },
+    { "name": "BIBA", "siteUrl": "https://www.biba.org.uk/news-publication/", "defaultCategory": "Trade" },
 
-    {
-      "name": "Claims Journal",
-      "feedUrl": "https://www.claimsjournal.com/rss/news",
-      "defaultCategory": "Claims"
-    },
-    {
-      "name": "Insurance Journal",
-      "feedUrl": "https://www.insurancejournal.com/rss/news",
-      "defaultCategory": "Claims"
-    },
-    {
-      "name": "PropertyCasualty360",
-      "feedUrl": "https://www.propertycasualty360.com/feed/",
-      "defaultCategory": "Claims"
-    },
+    { "name": "FCA - News (RSS)", "feedUrl": "https://www.fca.org.uk/news/rss.xml", "defaultCategory": "Trade" },
+    { "name": "Bank of England - News", "feedUrl": "https://www.bankofengland.co.uk/RSS/News", "defaultCategory": "Business" },
+    { "name": "PRA - Publications", "feedUrl": "https://www.bankofengland.co.uk/rss/prudential-regulation-publications", "defaultCategory": "Trade" },
+    { "name": "Bank Underground", "feedUrl": "https://bankunderground.co.uk/feed", "defaultCategory": "Business" },
+    { "name": "Bank Overground", "feedUrl": "https://www.bankofengland.co.uk/rss/bank-overground", "defaultCategory": "Business" },
 
-    {
-      "name": "Risk & Insurance",
-      "feedUrl": "https://riskandinsurance.com/feed",
-      "defaultCategory": "Risk"
-    },
-    {
-      "name": "Risk Management Monitor",
-      "feedUrl": "https://riskmanagementmonitor.com/feed",
-      "defaultCategory": "Risk"
-    },
-    {
-      "name": "Risk.net",
-      "feedUrl": "https://www.risk.net/rss",
-      "defaultCategory": "Risk"
-    },
+    { "name": "NCSC - All updates", "feedUrl": "https://www.ncsc.gov.uk/api/1/services/v1/all/rss-feed.xml", "defaultCategory": "Business" },
+    { "name": "The Register - Security", "feedUrl": "https://www.theregister.com/security/headlines.rss", "defaultCategory": "Business" },
 
-    {
-      "name": "Artemis – ILS & Reinsurance",
-      "feedUrl": "https://www.artemis.bm/feed",
-      "defaultCategory": "Reinsurance"
-    },
-    {
-      "name": "Reinsurance News",
-      "feedUrl": "https://www.reinsurancene.ws/feed/",
-      "defaultCategory": "Reinsurance"
-    },
+    { "name": "Insurance Fraud Bureau (IFB)", "feedUrl": "https://insurancefraudbureau.org/rss", "defaultCategory": "Motor" },
+    { "name": "Thatcham Research - All news", "feedUrl": "https://news.thatcham.org/section/all-news/feed/", "defaultCategory": "Motor" },
 
-    {
-      "name": "UK Finance – News",
-      "feedUrl": "https://www.ukfinance.org.uk/news-and-insight/blog/feed",
-      "defaultCategory": "Regulation"
-    },
-    {
-      "name": "Bank of England – News",
-      "feedUrl": "https://www.bankofengland.co.uk/rss/news",
-      "defaultCategory": "Regulation"
-    },
-    {
-      "name": "Prudential Regulation Authority",
-      "feedUrl": "https://www.bankofengland.co.uk/rss/prudential-regulation-publications",
-      "defaultCategory": "Regulation"
-    },
-    {
-      "name": "Financial Conduct Authority",
-      "feedUrl": "https://www.fca.org.uk/news/rss.xml",
-      "defaultCategory": "Regulation"
-    },
+    { "name": "Flood Re - News", "feedUrl": "https://floodre.co.uk/news/feed", "defaultCategory": "Home" },
 
-    {
-      "name": "Cyber Security News",
-      "feedUrl": "https://www.csoonline.com/uk/feed/",
-      "defaultCategory": "Security"
-    },
-    {
-      "name": "Dark Reading",
-      "feedUrl": "https://www.darkreading.com/rss.xml",
-      "defaultCategory": "Security"
-    },
-    {
-      "name": "The Hacker News",
-      "feedUrl": "https://thehackernews.com/feeds/posts/default",
-      "defaultCategory": "Security"
-    },
+    { "name": "MoneySavingExpert - News", "feedUrl": "https://www.moneysavingexpert.com/news/feeds/news.rss", "defaultCategory": "Business" },
+    { "name": "Save the Student", "feedUrl": "https://savethestudent.org/feed", "defaultCategory": "Student" },
 
-    {
-      "name": "ABI – Association of British Insurers",
-      "feedUrl": "https://www.abi.org.uk/news/rss/",
-      "defaultCategory": "Insurance"
-    },
-    {
-      "name": "Lloyd’s of London – News",
-      "feedUrl": "https://www.lloyds.com/rss",
-      "defaultCategory": "Insurance"
-    },
-    {
-      "name": "McKinsey – Insurance Insights",
-      "feedUrl": "https://www.mckinsey.com/industries/financial-services/our-insights/rss",
-      "defaultCategory": "Risk"
-    }
+    { "name": "Farmers Weekly - All articles", "feedUrl": "https://www.fwi.co.uk/rss-feed/56", "defaultCategory": "Rural" },
+
+    { "name": "BBC News - Business", "feedUrl": "https://feeds.bbci.co.uk/news/business/rss.xml", "defaultCategory": "Business" },
+    { "name": "BBC News - UK", "feedUrl": "https://feeds.bbci.co.uk/news/uk/rss.xml", "defaultCategory": "Business" },
+    { "name": "BBC News - Health", "feedUrl": "https://feeds.bbci.co.uk/news/health/rss.xml", "defaultCategory": "Life & Health" },
+    { "name": "BBC News - Family & Education", "feedUrl": "https://feeds.bbci.co.uk/news/education/rss.xml", "defaultCategory": "Student" },
+
+    { "name": "National Crime Agency - News", "feedUrl": "https://www.nationalcrimeagency.gov.uk/news?format=feed&type=rss", "defaultCategory": "Business" },
+
+    { "name": "Insurance Post - RSS directory", "siteUrl": "https://www.postonline.co.uk/rss-feeds", "defaultCategory": "Trade" },
+    { "name": "Insurance Day - RSS directory", "siteUrl": "https://www.insuranceday.com/rss-feeds", "defaultCategory": "Trade" },
+
+    { "name": "Thatcham Research (main site feed)", "feedUrl": "https://www.thatcham.org/feed/", "defaultCategory": "Motor" },
+    { "name": "Reinsurance (UK focus - Insurance Post section)", "siteUrl": "https://www.postonline.co.uk/reinsurance", "defaultCategory": "Trade" },
+
+    { "name": "MoneySavingExpert Forum - Travel Insurance (forum feed)", "siteUrl": "https://forums.moneysavingexpert.com/categories/travel-insurance", "defaultCategory": "Life & Health" },
+    { "name": "MoneySavingExpert Forum - Motoring (forum feed)", "siteUrl": "https://forums.moneysavingexpert.com/categories/motoring", "defaultCategory": "Motor" },
+
+    { "name": "BBC News - Technology", "feedUrl": "https://feeds.bbci.co.uk/news/technology/rss.xml", "defaultCategory": "Business" },
+    { "name": "BBC News - Science & Environment", "siteUrl": "https://www.bbc.com/news/science_and_environment", "defaultCategory": "Home" },
+
+    { "name": "MoneySavingExpert - Insurance hub", "siteUrl": "https://www.moneysavingexpert.com/insurance/", "defaultCategory": "Home" }
   ]
 }
